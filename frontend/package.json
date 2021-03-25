@@ -1,0 +1,60 @@
+{
+  "name": "scrum-tcc",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.3",
+    "@quasar/extras": "^1.0.0",
+    "@tailwindcss/forms": "^0.2.1",
+    "animate.css": "^4.1.1",
+    "axios": "^0.21.1",
+    "core-js": "^3.6.5",
+    "lodash": "^4.17.21",
+    "popper.js": "^1.16.1",
+    "quasar": "^2.0.0-beta.1",
+    "vt-notifications": "^0.4.1",
+    "vue": "^3.0.0",
+    "vue-router": "^4.0.0-0",
+    "vue-toast-notification": "^0.6.1",
+    "vuesax": "^4.0.1-alpha.25"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss7-compat": "^2.0.3",
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-router": "^4.5.11",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.0.0",
+    "autoprefixer": "^9.8.6",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^7.0.0-0",
+    "postcss": "^7.0.35",
+    "postcss-rtl": "^1.2.3",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.3",
+    "vue-cli-plugin-quasar": "^4.0.0-beta.1"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
