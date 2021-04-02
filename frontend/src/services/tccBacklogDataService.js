@@ -21,28 +21,28 @@ class TccBacklogDataService {
       return http.delete(`/tccBacklog/${id}`);
     }
 
-    getAllPrioridadeAlta() {
-      return http.get("/tccBacklog/filter/prioridade-alta");
+    getAllPrioridadeAlta(id) {
+      return http.get(`/tccBacklog/usuario/${id}/filter/prioridade-alta`);
     }
 
-    getAllPrioridadeMedia() {
-      return http.get("/tccBacklog/filter/prioridade-media");
+    getAllPrioridadeMedia(id) {
+      return http.get(`/tccBacklog/usuario/${id}/filter/prioridade-media`);
     }
 
-    getAllPrioridadeBaixa() {
-      return http.get("/tccBacklog/filter/prioridade-baixa");
+    getAllPrioridadeBaixa(id) {
+      return http.get(`/tccBacklog/usuario/${id}/filter/prioridade-baixa`);
     }
 
-    getAllStatusPendente() {
-      return http.get("/tccBacklog/filter/status-pendente");
+    getAllStatusPendente(id) {
+      return http.get(`/tccBacklog/usuario/${id}/filter/status-pendente`);
     }
 
-    getAllStatusFazendo() {
-      return http.get("/tccBacklog/filter/status-fazendo");
+    getAllStatusFazendo(id) {
+      return http.get(`/tccBacklog/usuario/${id}/filter/status-fazendo`);
     }
 
-    getAllStatusFinalizado() {
-      return http.get("/tccBacklog/filter/status-finalizado");
+    getAllStatusFinalizado(id) {
+      return http.get(`/tccBacklog/usuario/${id}/filter/status-finalizado`);
     }
 }
 

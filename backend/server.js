@@ -26,7 +26,10 @@ app.get("/", (req, res) => {
 
 require("./app/routes/usuario.routes")(app);
 require("./app/routes/tccBacklog.routes")(app);
+require("./app/routes/sprint.routes")(app);
+require("./app/routes/itensTccSprint.routes")(app);
 
+db.sequelize.sync({ alter: true });
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);

@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const ItensTccBacklog = sequelize.define("tccBacklog", {
+    const itensTccSprint = sequelize.define("itensTccSprint", {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -12,5 +12,5 @@ module.exports = (sequelize, Sequelize) => {
       
     });
   
-    return ItensTccBacklog;
+    return itensTccSprint;
   };

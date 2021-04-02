@@ -18,7 +18,8 @@ exports.create = (req, res) => {
     prioridade: req.body.prioridade,
     status: req.body.status,
     estimativa: req.body.estimativa,
-    dataCadastro: req.body.dataCadastro
+    dataCadastro: req.body.dataCadastro,
+    id_usuario: req.body.id_usuario
   };
 
   // Save TccBacklog in the database
@@ -51,16 +52,31 @@ exports.findAll = (req, res) => {
     });
 };
 
+// exports.findAllByUsuario = (req, res) => {
+//   const id_usuario = req.query.id_usuario;
+
+//   TccBacklog.findAll({  include: { all: true }})
+//     .then(data => {
+//       res.send(data);
+//     })
+//     .catch(err => {
+//       res.status(500).send({
+//         message:
+//           err.message || "Ocorreu algum erro ao buscar o TccBacklog."
+//       });
+//     });
+// };
+
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  TccBacklog.findByPk(id)
+  TccBacklog.findOne({where : { id: id }})
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
-        message: "Erro ao buscar tccBacklog com id= " + id
+        message: err.message || "Ocorreu algum erro ao buscar o TccBacklog com id=" + id
       });
     });
 };
@@ -114,7 +130,8 @@ exports.delete = (req, res) => {
 };
 
 exports.findAllPrioridadeAlta = (req, res) => {
-  TccBacklog.findAll({ where: { prioridade: 'alta' } })
+  const id = req.params.id;
+  TccBacklog.findAll({ where: { prioridade: 'alta', id_usuario: id} })
     .then(data => {
       res.send(data);
     })
@@ -127,7 +144,8 @@ exports.findAllPrioridadeAlta = (req, res) => {
 };
 
 exports.findAllPrioridadeMedia = (req, res) => {
-  TccBacklog.findAll({ where: { prioridade: 'media' } })
+  const id = req.params.id;
+  TccBacklog.findAll({ where: { prioridade: 'media', id_usuario: id } })
     .then(data => {
       res.send(data);
     })
@@ -140,7 +158,8 @@ exports.findAllPrioridadeMedia = (req, res) => {
 };
 
 exports.findAllPrioridadeBaixa = (req, res) => {
-  TccBacklog.findAll({ where: { prioridade: 'baixa' } })
+  const id = req.params.id;
+  TccBacklog.findAll({ where: { prioridade: 'baixa', id_usuario: id } })
     .then(data => {
       res.send(data);
     })
@@ -153,7 +172,8 @@ exports.findAllPrioridadeBaixa = (req, res) => {
 };
 
 exports.findAllStatusPendente= (req, res) => {
-  TccBacklog.findAll({ where: { status: 'pendente' } })
+  const id = req.params.id;
+  TccBacklog.findAll({ where: { status: 'pendente', id_usuario: id } })
     .then(data => {
       res.send(data);
     })
@@ -166,7 +186,8 @@ exports.findAllStatusPendente= (req, res) => {
 };
 
 exports.findAllStatusFazendo = (req, res) => {
-  TccBacklog.findAll({ where: { prioridade: 'fazendo' } })
+  const id = req.params.id;
+  TccBacklog.findAll({ where: { status: 'fazendo', id_usuario: id } })
     .then(data => {
       res.send(data);
     })
@@ -179,7 +200,8 @@ exports.findAllStatusFazendo = (req, res) => {
 };
 
 exports.findAllStatusFinalizado = (req, res) => {
-  TccBacklog.findAll({ where: { prioridade: 'finalizado' } })
+  const id = req.params.id;
+  TccBacklog.findAll({ where: { status: 'finalizado', id_usuario: id } })
     .then(data => {
       res.send(data);
     })

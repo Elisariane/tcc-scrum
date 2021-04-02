@@ -1,5 +1,6 @@
 const db = require("../models");
 const Usuario = db.usuario;
+const TccBacklog = db.tccBacklog;
 const Op = require("sequelize");
 
 exports.create = (req, res) => {
@@ -49,11 +50,34 @@ exports.findAll = (req, res) => {
     });
 };
 
+exports.findAllByUsuario = (req, res) => {
+    const id = req.params.id;
+
+  Usuario.findAll({  where : { id: id }, include: { all: true, nested: true }})
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Ocorreu algum erro ao buscar o TccBacklog."
+      });
+    });
+};
+
+
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  Usuario.findByPk(id)
-    .then(data => {
+  Usuario.findOne({where : { id: id }}, {
+    include : [ { 
+        model : TccBacklog, 
+        as : 'tccBacklog' 
+      }] 
+    }).then(data => {
+      if (!data) {
+        return res.status(404).json({ message: 'Usuário não encontrado' });
+      }
       res.send(data);
     })
     .catch(err => {
@@ -110,29 +134,3 @@ exports.delete = (req, res) => {
       });
     });
 };
-
-// exports.findAllProfessores = (req, res) => {
-//   Usuario.findAll({ where: { tipoUsuario: 'professor' } })
-//     .then(data => {
-//       res.send(data);
-//     })
-//     .catch(err => {
-//       res.status(500).send({
-//         message:
-//           err.message || "Ocorreu algum erro ao recuperar os usuarios."
-//       });
-//     });
-// };
-
-// exports.findAllAlunos = (req, res) => {
-//   Usuario.findAll({ where: { tipoUsuario: 'aluno' } })
-//     .then(data => {
-//       res.send(data);
-//     })
-//     .catch(err => {
-//       res.status(500).send({
-//         message:
-//           err.message || "Ocorreu algum erro ao recuperar os usuarios."
-//       });
-//     });
-// };

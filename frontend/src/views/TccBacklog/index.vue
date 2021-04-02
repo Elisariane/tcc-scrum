@@ -4,7 +4,7 @@
       <q-page-container>
       <div class="q-pa-md">
       <div class="on-right q-ma-md">
-        <q-btn rounded :size="lg"  color="positive" @click="toolbar = true"> <q-icon name="add"  style="font-size: 32px;"/> </q-btn>  
+        <q-btn round  :size="lg"  color="positive" @click="toolbar = true"> <q-icon name="add"  style="font-size: 52px; padding: 4px"/> </q-btn>  
       </div>
 
     <q-table
@@ -60,12 +60,24 @@
           <q-td key="requisito" :props="props"> 
               {{props.row.requisito}}
           </q-td>
+          
           <q-td key="descricao" :props="props" class="cols-3"> 
-              {{props.row.descricao}}
+              {{ props.row.descricao.length > 50 ? props.row.descricao.substr(0, 50) + ' ...' : props.row.descricao }} 
+          <q-btn size="sm" rounded flat color="dark"  v-if="props.row.descricao.length > 50">
+          <q-icon name="remove_red_eye" />
+          <q-tooltip
+            transition-show="scale"
+            transition-hide="scale"
+            anchor="bottom middle" self="center middle"
+            
+          >
+            {{props.row.descricao}}
+          </q-tooltip>
+      </q-btn>
           </q-td>
           <q-td key="status" :props="props">
               <q-badge color="deep-orange-10" rounded  :label="props.row.status.toUpperCase()" v-if="props.row.status === 'pendente' "/>
-              <q-badge color="yellow-5" rounded  :label="props.row.status.toUpperCase()" v-if="props.row.status === 'fazendo' "/>
+              <q-badge color="yellow-8" rounded  :label="props.row.status.toUpperCase()" v-if="props.row.status === 'fazendo' "/>
               <q-badge color="green-5" rounded  :label="props.row.status.toUpperCase()" v-if="props.row.status === 'finalizado' "/>
           </q-td>
           <q-td key="prioridade" :props="props"> 
@@ -77,8 +89,8 @@
               {{props.row.estimativa}}
           </q-td>
           <q-td key="acao" :props="props"> 
-              <q-btn  color="primary" @click="toolbar = true; editItem(props.row.id)"  class="q-ma-sm">  <q-icon name="mode_edit" /> </q-btn>
-              <q-btn color="negative"  @click="deleteItem(props.row.id)" > <q-icon name="delete_forever" /> </q-btn>
+              <q-btn  color="primary" @click="toolbar = true; selectItemForEdit(props.row.id)"  class="q-ma-sm">  <q-icon name="mode_edit" /> </q-btn>
+              <q-btn color="negative"  @click="selectItemForDelete(props.row.id); confirmDelete = true" > <q-icon name="delete_forever" /> </q-btn>
           </q-td>  
           
         </q-tr>
@@ -86,77 +98,9 @@
     </q-table>
   </div>
   
-  <div class="q-ma-md">
-      <div class="row q-mb-md q-col-gutter-md">
-        <div class="col-md-3 col-lg-3 col-sm-12 col-xs-12 box_1">
-          <q-card class="shadow">
-            <q-card-section class="bg-teal-6 q-pa-sm text-white">
-              <q-item class="q-pb-none q-pt-xs">
-                <q-item-section>
-                  <q-item-label class="text-h4" style="font-weight: 500;letter-spacing: 3px;">{{total}}</q-item-label>
-                  <q-item-label class="text-grey-4">Total de Horas de Todo o 
-                  Projeto</q-item-label>
-                </q-item-section>
+  <ProjetosEmHoras/>
 
-                <q-item-section side>
-                  <q-icon name="access_time" class="box_1 text-white" size="80px"></q-icon>
-                </q-item-section>
-              </q-item>
-            </q-card-section>
-          </q-card>
-        </div>
-        <div class="col-md-3 col-lg-3 col-sm-12 col-xs-12 box_2 ">
-          <q-card class="shadow ">
-            <q-card-section class="bg-green-6 q-pa-sm text-white">
-              <q-item class="q-pb-none q-pt-xs">
-                <q-item-section>
-                  <q-item-label class="text-h4" style="font-weight: 500;letter-spacing: 3px;">1050</q-item-label>
-                  <q-item-label class="text-grey-4">Total de Horas de Tarefas já concluídas</q-item-label>
-                </q-item-section>
-
-                <q-item-section side>
-                  <q-icon name="access_time" class="box_2 text-white" size="80px"></q-icon>
-                </q-item-section>
-              </q-item>
-            </q-card-section>
-          </q-card>
-        </div>
-        <div class="col-md-3 col-lg-3 col-sm-12 col-xs-12 box_3 ">
-          <q-card class="shadow">
-            <q-card-section class="bg-yellow-8  q-pa-sm text-white">
-              <q-item class="q-pb-none q-pt-xs">
-                <q-item-section>
-                  <q-item-label class="text-h4" style="font-weight: 500;letter-spacing: 3px;">80 %</q-item-label>
-                  <q-item-label class="text-grey-4">Total de Horas de Tarefas em andamento</q-item-label>
-                </q-item-section>
-
-                <q-item-section side>
-                  <q-icon name="access_time" class="box_3 text-white" size="80px"></q-icon>
-                </q-item-section>
-              </q-item>
-            </q-card-section>
-          </q-card>
-        </div>
-        <div class="col-md-3 col-lg-3 col-sm-12 col-xs-12 box_3 ">
-          <q-card class="shadow">
-            <q-card-section class="bg-deep-orange-6  q-pa-sm text-white">
-              <q-item class="q-pb-none q-pt-xs">
-                <q-item-section>
-                  <q-item-label class="text-h4" style="font-weight: 500;letter-spacing: 3px;">80 %</q-item-label>
-                  <q-item-label class="text-grey-4">Total de Horas de Tarefas pendentes</q-item-label>
-                </q-item-section>
-
-                <q-item-section side>
-                  <q-icon name="access_time" class="box_3 text-white" size="80px"></q-icon>
-                </q-item-section>
-              </q-item>
-            </q-card-section>
-          </q-card>
-        </div>
-      </div>
-  </div>
-
-  <q-dialog v-model="toolbar">
+  <q-dialog v-model="toolbar" persistent>
     <q-card>
       <q-toolbar>
         <q-btn flat round dense icon="close" v-close-popup />
@@ -164,7 +108,9 @@
 
       <q-card-section>
         <div class="q-pa-xs items-center justify-center content-center q-gutter-xs">
-            <h4 class="text-title text-center">Novo item no Tcc Backlog Nº {{(this.listItensTccBakclog.length + 1)}}</h4>
+            <h4 class="text-title text-center" v-if="this.isEdit === false"> Nova tarefa no Tcc Backlog Nº {{(this.listItensTccBakclog.length + 1)}}</h4>
+            <h4 class="text-title text-center" v-if="this.isEdit === true"> Editar tarefa {{this.idSelected}} no Tcc Backlog </h4>
+
             <hr>
                 <q-form
                   @submit="onSubmit"
@@ -193,9 +139,13 @@
                     v-model="itemTccBacklog.prioridade" 
                     :options="prioridades" 
                     v-bind:value="prioridades.value"
-                    label="Prioridade" />
-
+                    lazy-rules
+                    :rules="[
+                      val => val !== 0 && val !== '' || 'Informe a prioridade do requisito']"
+                    label="Prioridade *" />
+                    
                   <q-input
+                    stack-label
                     filled
                     type="time"
                     v-model="itemTccBacklog.estimativa"
@@ -204,54 +154,76 @@
                     min="00:05:00" 
                     max="08:00:00"
                     :rules="[
-                      val => val !== null && val !== '' || 'Informe a descrição do requisito',
+                      val => val !== null && val !== '' || 'Informe a estimativa',
                       val => val <= '08:00:00' || 'As tarefas devem ter menos de 8 horas de duração',
                       val => val >= '00:04:00' || 'As tarefas devem ter no mínimo 5 minutos de duração'
                       ]"
                   />
                   <div class="justify-end">
-                    <q-btn label="Add"   @click="saveItem()" color="primary"/>
-                    <q-btn label="Limpar" type="reset" color="primary" flat class="q-ml-sm" />
+                    <q-btn label="Salvar" type="submit"   @click="saveItem()" color="primary" v-if="this.isEdit === false"/>
+                    <q-btn label="Editar" type="submit" @click="editItem()" color="info" v-if="this.isEdit === true" />
+                    <q-btn label="Cancelar"  color="negative" @click="toolbar = false; this.isEdit = false; this.itemTccBacklog = {}" class="q-ml-sm" />
                   </div>
                 </q-form>
         </div>     
       </q-card-section>
     </q-card>
   </q-dialog>
+  
+  <q-dialog v-model="confirmDelete" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <q-avatar class="q-mrb-sm" icon="warning" color="warning" text-color="white" />
+          <span class="q-ml-sm text-center">Tem certeza que deseja excluir a tarefa {{this.idSelected}} ? <br/> Este item não voltará nunca mais ... </span>
+        </q-card-section>
 
+        <q-card-actions align="center">
+          <q-btn  label="Deletar"  @click="deleteItem(this.idSelected)" color="negative" v-close-popup />
+          <q-btn flat  label="Cancelar" color="primary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
       
 
-      </q-page-container>
-    <Footer/>
+  </q-page-container>
+  <Footer/>
   </q-layout>
 </template>
 
 <script> 
 import Menu from '@/components/Menu/index.vue';
 import Footer from '@/components/Footer/index.vue';
+import ProjetosEmHoras from '@/components/ProjetosEmHoras/index.vue';
 import TccBacklogDataService from '../../services/tccBacklogDataService';
-import { ref } from 'vue'
+import UsuarioDataService from '../../services/usuarioDataService';
+import { ref } from 'vue'; 
+import { useQuasar } from 'quasar'
+
 
 export default {
-  mounted () {
-    this.getItens()
-  },
   name: 'TccBacklog',
   components: {
     Menu,
-    Footer
+    Footer,
+    ProjetosEmHoras
+  },
+  mounted () {
+    this.getItens()
   },
   setup () {
     return {
-      toolbar: ref(false)
+      toolbar: ref(false),
+      confirmDelete: ref(false)
     }
   },
    data() {
-    return {
-      totalHoras: 0,
+    return { 
+      isEdit: false,
+      idSelected: 0,
       page: 1,
       pesquisaItem: '',
       dropdownPopoverShow: false,
+      idUsuario: 1,
       prioridades: [
         'Alta',
         'Média',
@@ -338,6 +310,7 @@ export default {
         prioridade: this.itemTccBacklog.prioridade,
         estimativa: this.itemTccBacklog.estimativa,
         status: "pendente",
+        id_usuario: 1, //por hora o usuario será fixo
         dataCadastro: new Date().toISOString()
       };
 
@@ -346,6 +319,7 @@ export default {
           this.itemTccBacklog.id = response.data.id;
           this.getItens();
           this.itemTccBacklog = {};
+          toolbar = false
         })
         .catch(e => {
           console.log(e);
@@ -361,19 +335,30 @@ export default {
           console.log(e);
         });
     },
-    editItem(id) {
-      TccBacklogDataService.get(id).then(response => {
-          this.itemTccBacklog.requisito = response.data.requisito,
-          this.itemTccBacklog.descricao = response.data.descricao,
-          this.itemTccBacklog.prioridade = response.data.prioridade,
-          this.itemTccBacklog.estimativa = response.data.estimativa,
-          this.itemTccBacklog.status = response.data.status,
-          this.itemTccBacklog.dataCadastro = response.data.dataCadastro
-        })
-        .catch(e => {
-          console.log(e);
-        });
+    selectItemForDelete(id){
+       this.idSelected = id;
+    },
+    selectItemForEdit(id){
+    this.isEdit = true;
+    this.idSelected = id;
+    TccBacklogDataService.get(id).then(response => {
+      this.itemTccBacklog.id = response.data.id,
+      this.itemTccBacklog.requisito = response.data.requisito,
+      this.itemTccBacklog.descricao = response.data.descricao,
+      this.itemTccBacklog.prioridade = response.data.prioridade,
+      this.itemTccBacklog.estimativa = response.data.estimativa,
+      this.itemTccBacklog.status = response.data.status,
+      this.itemTccBacklog.dataCadastro = response.data.dataCadastro;
+      return this.itemTccBacklog;
+    })
+    .catch(e => {
+      console.log(e);
+    });
+    },
+    editItem() {
       var data = {
+        somaHoras: 0,
+        id: this.idSelected,
         requisito: this.itemTccBacklog.requisito,
         descricao: this.itemTccBacklog.descricao,
         prioridade: this.itemTccBacklog.prioridade,
@@ -382,53 +367,54 @@ export default {
         dataCadastro: this.itemTccBacklog.dataCadastro
       };
 
-      TccBacklogDataService.update(data)
+      TccBacklogDataService.update(this.idSelected, data)
         .then(response => {
-          console.log(response.data);
+          this.itemTccBacklog = response.config.data;
           this.getItens();
           this.itemTccBacklog = {};
+          toolbar = false;
         })
         .catch(e => {
           console.log(e);
         });
     },
     getItens() {
-       TccBacklogDataService.getAll().then( response => {
-        this.listItensTccBakclog = response.data;
+        UsuarioDataService.getAllByUsuario(this.idUsuario).then( response => {
+          console.log(response.data)
+        this.listItensTccBakclog = response.data[0].tccBacklogs;
       })
     },
     getAllPrioridadeAlta() {
-       TccBacklogDataService.getAllPrioridadeAlta().then( response => {
+       TccBacklogDataService.getAllPrioridadeAlta(this.idUsuario).then( response => {
         this.listItensTccBakclog = response.data;
       })
     },
     getAllPrioridadeMedia() {
-       TccBacklogDataService.getAllPrioridadeMedia().then( response => {
+       TccBacklogDataService.getAllPrioridadeMedia(this.idUsuario).then( response => {
         this.listItensTccBakclog = response.data;
       })
     },
     getAllPrioridadeBaixa () {
-       TccBacklogDataService.getAllPrioridadeBaixa().then( response => {
+       TccBacklogDataService.getAllPrioridadeBaixa(this.idUsuario).then( response => {
         this.listItensTccBakclog = response.data;
       })
     },
     getAllStatusPendente() {
-       TccBacklogDataService.getAllStatusPendente().then( response => {  
+       TccBacklogDataService.getAllStatusPendente(this.idUsuario).then( response => {  
         this.listItensTccBakclog = response.data;
       })
       
     },
     getAllStatusFazendo() {
-       TccBacklogDataService.getAllStatusFazendo().then( response => {
+       TccBacklogDataService.getAllStatusFazendo(this.idUsuario).then( response => {
         this.listItensTccBakclog = response.data;
       })
     },
     getAllStatusFinalizado() {
-       TccBacklogDataService.getAllStatusFinalizado().then( response => {
+       TccBacklogDataService.getAllStatusFinalizado(this.idUsuario).then( response => {
         this.listItensTccBakclog = response.data;
       })
     },
-   
     watch: {
       page () {
         this.getItens()
@@ -438,10 +424,6 @@ export default {
       url () {
         return `itensTccBakclog?page=${this.page}&per_page=10${this.search}`
       },
-      search () {
-        return this.pesquisaItem ? `&item_name=${this.pesquisaItem}` : ''
-      },
- 
     },
 }
 } 

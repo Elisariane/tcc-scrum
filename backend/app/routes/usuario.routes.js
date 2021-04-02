@@ -6,11 +6,9 @@ module.exports = app => {
     router.post("/", usuario.create);
   
     router.get("/", usuario.findAll);
+    
+    router.get("/allBy/:id", usuario.findAllByUsuario);
   
-    // router.get("/all/professores", usuario.findAllProfessores);
-
-    // router.get("/all/alunos", usuario.findAllAlunos);
-
     router.get("/:id", usuario.findOne);
   
     router.put("/:id", usuario.update);

@@ -4,10 +4,30 @@
         <q-toolbar>
           <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
           <q-toolbar-title>TCCScrum</q-toolbar-title>
+          
           <div class="q-pa-md q-gutter-sm">
-            <q-avatar>
-              <img src="https://cdn.quasar.dev/img/avatar.png">
-            </q-avatar>
+           
+          <q-btn-dropdown round flat fab dropdown-icon >
+                <template v-slot:label>
+                  <div class="row items-center no-wrap">
+                  <q-icon name="account_circle" color="white" size="32px"/>
+                  </div>
+               </template>
+
+            <q-list>
+              <q-item clickable v-close-popup @click="onItemClick">
+                <q-item-section>
+                  <q-item-label>Ver Perfil</q-item-label>
+                </q-item-section>
+              </q-item>
+
+              <q-item clickable v-close-popup @click="onItemClick">
+                <q-item-section>
+                  <q-item-label>Sair</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
           </div>
         </q-toolbar>
       </q-header>
@@ -33,27 +53,27 @@
                 <q-icon name="dashboard" />
               </q-item-section>
               <q-item-section>
-                Dashboard
+                <a href="/dashboard" class="text-dark" style="text-decoration: none"> Dashboard</a>
               </q-item-section>
             </q-item>
 
             <q-item clickable v-ripple>
               <q-item-section avatar>
-                <q-icon name="star" />
+                <q-icon name="move_to_inbox" />
               </q-item-section>
-
               <q-item-section>
-                Star
+                <a href="/criar-sprint" class="text-dark" style="text-decoration: none">Criar Sprint</a>
               </q-item-section>
             </q-item>
 
             <q-item clickable v-ripple>
               <q-item-section avatar>
-                <q-icon name="send" />
+                <q-icon name="list" />
               </q-item-section>
 
               <q-item-section>
-                Send
+              <a href="/tcc-backlog" class="text-dark" style="text-decoration: none">TCC Backlog</a>
+                
               </q-item-section>
             </q-item>
 
