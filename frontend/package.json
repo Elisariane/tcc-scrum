@@ -15,9 +15,11 @@
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "bootstrap": "^4.6.0",
     "core-js": "^3.6.5",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "jquery": "^3.6.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
@@ -28,10 +30,12 @@
     "sequelize": "^6.6.2",
     "vt-notifications": "^0.4.1",
     "vue": "^3.0.0",
-    "vue-router": "^4.0.0-0",
+    "vue-router": "^4.0.5",
     "vue-toast-notification": "^0.6.1",
     "vuedraggable": "^2.24.3",
-    "vuesax": "^4.0.1-alpha.25"
+    "vuesax": "^4.0.1-alpha.25",
+    "vuex": "^4.0.0-alpha.1",
+    "vuex-persistedstate": "^4.0.0-beta.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss7-compat": "^2.0.3",

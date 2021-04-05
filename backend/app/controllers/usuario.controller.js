@@ -2,6 +2,9 @@ const db = require("../models");
 const Usuario = db.usuario;
 const TccBacklog = db.tccBacklog;
 const Op = require("sequelize");
+var jwt = require("jsonwebtoken");
+var bcrypt = require("bcryptjs");
+const config = require("../config/auth.config");
 
 exports.create = (req, res) => {
   // Validate request
@@ -53,7 +56,11 @@ exports.findAll = (req, res) => {
 exports.findAllByUsuario = (req, res) => {
     const id = req.params.id;
 
-  Usuario.findAll({  where : { id: id }, include: { all: true, nested: true }})
+  Usuario.findAll({  where : { id: id }, 
+    include: { 
+      all: true,
+      nested: true,
+     }})
     .then(data => {
       res.send(data);
     })
@@ -133,4 +140,64 @@ exports.delete = (req, res) => {
         message: "Não foi possível deletar Usuario com id = " + id
       });
     });
+};
+
+exports.signup = (req, res) => {
+  // Save Usuario to Database
+  Usuario.create({
+    nome: req.body.nome,
+    email: req.body.email,
+    senha: bcrypt.hashSync(req.body.senha, 8),
+    tipoUsuario: req.body.tipoUsuario
+  })
+    .then(data => {
+      res.send({ message: "O usuário foi cadastrado com sucesso!" });
+    })
+    .catch(err => {
+      res.status(500).send({ message: err.message });
+    });
+};
+
+exports.signin = (req, res) => {
+  Usuario.findOne({
+    where: {
+      email: req.body.email
+    }
+  }).then(usuario => {
+      console.log(usuario)
+      if (!usuario) {
+        return res.status(404).send({ message: "Usuario Não Encontrado." });
+      }
+
+      var passwordIsValid = bcrypt.compareSync(
+        req.body.senha,
+        usuario.senha
+      );
+
+      if (!passwordIsValid) {
+        return res.status(401).send({
+          accessToken: null,
+          message: "Senha Invalida!"
+        });
+      }
+
+      var token = jwt.sign({ id: usuario.id }, config.secret, {
+        expiresIn: 86400 // 24 hours
+      });
+
+      res.status(200).send({
+        id: usuario.id,
+        nome: usuario.nome,
+        email: usuario.email,
+        tipoUsuario: usuario.tipoUsuario.toUpperCase(),
+        accessToken: token
+      });
+    })
+    .catch(err => {
+      res.status(500).send({ message: err.message });
+    });
+};
+
+exports.allAccess = (req, res) => {
+  res.status(200).send("Public Content.");
 };

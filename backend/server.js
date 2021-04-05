@@ -28,6 +28,7 @@ require("./app/routes/usuario.routes")(app);
 require("./app/routes/tccBacklog.routes")(app);
 require("./app/routes/sprint.routes")(app);
 require("./app/routes/itensTccSprint.routes")(app);
+require("./app/routes/auth.routes")(app);
 
 db.sequelize.sync({ alter: true });
 const PORT = process.env.PORT || 8080;

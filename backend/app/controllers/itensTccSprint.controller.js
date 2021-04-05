@@ -47,20 +47,21 @@ exports.findAll = (req, res) => {
     });
 };
 
-// exports.findAllByUsuario = (req, res) => {
-//   const id = req.params.id;
+exports.findAllByUsuario = (req, res) => {
+  const id = req.params.id;
 
-// ItensTccSprint.findAll({  where : { id: id }, include: { all: true }})
-//   .then(data => {
-//     res.send(data);
-//   })
-//   .catch(err => {
-//     res.status(500).send({
-//       message:
-//         err.message || "Ocorreu algum erro ao buscar o TccBacklog."
-//     });
-//   });
-// };
+ItensTccSprint.findAll({  where : { concluido: false, id_sprint: id}, include: 
+  {  model: db.tccBacklog, all: true, nested:true }})
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Ocorreu algum erro ao buscar o TccBacklog."
+    });
+  });
+};
 
 exports.findOne = (req, res) => {
   const id = req.params.id;

@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+import store from './store';
+  
 import {
     Quasar,
     Notify
@@ -9,7 +11,9 @@ import quasarUserOptions from './quasar-user-options'
  
 
 const app = createApp(App).use(Quasar, quasarUserOptions, Notify)
+app.use(store)
 app.use(router)
+
 app.use(Quasar, {
   plugins: {
     Notify
@@ -18,4 +22,5 @@ app.use(Quasar, {
     notify: { /* look at QuasarConfOptions from the API card */ }
   }
 })
+
 app.mount('#app')

@@ -5,6 +5,8 @@ const Login = () => import('../views/Login/index.vue')
 const SignUp = () => import('../views/SignUp/index.vue')
 const Dashboard = () => import('../views/Dashboard/index.vue')
 const CriarSprint = () => import('../views/CriarSprint/index.vue')
+const Profile = () => import('../views/Profile/index.vue')
+
 export const routes = [
   {
     path: '/',
@@ -30,6 +32,11 @@ export const routes = [
     path: '/register',
     name: 'SignUp',
     component: SignUp
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: Profile
   },
   {
     path: '/:pathMatch(.*)*',

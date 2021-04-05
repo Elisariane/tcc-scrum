@@ -208,7 +208,7 @@ export default {
     ProjetosEmHoras
   },
   mounted () {
-    this.getItens()
+    // this.getItens()
   },
   setup () {
     return {
@@ -223,7 +223,7 @@ export default {
       page: 1,
       pesquisaItem: '',
       dropdownPopoverShow: false,
-      idUsuario: 1,
+      idUsuario: 0,
       prioridades: [
         'Alta',
         'Média',
@@ -424,6 +424,7 @@ export default {
       url () {
         return `itensTccBakclog?page=${this.page}&per_page=10${this.search}`
       },
+ 
     },
 }
 } 

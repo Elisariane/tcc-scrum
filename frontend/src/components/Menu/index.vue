@@ -17,14 +17,13 @@
             <q-list>
               <q-item clickable v-close-popup @click="onItemClick">
                 <q-item-section>
-                  <q-item-label>Ver Perfil</q-item-label>
+                  <a href="/profile" class="text-dark" style="text-decoration: none"> Ver Perfil</a>
                 </q-item-section>
               </q-item>
-
-              <q-item clickable v-close-popup @click="onItemClick">
-                <q-item-section>
-                  <q-item-label>Sair</q-item-label>
-                </q-item-section>
+              <q-item clickable >
+                  <q-item-section @click="this.sair()">
+                    Sair
+                 </q-item-section>
               </q-item>
             </q-list>
           </q-btn-dropdown>
@@ -84,7 +83,7 @@
                 <q-icon name="logout" />
               </q-item-section>
 
-              <q-item-section>
+              <q-item-section @click="this.sair()">
                 Sair
               </q-item-section>
             </q-item>
@@ -96,12 +95,17 @@
 
 <script>
 import { ref } from 'vue'
-
+import Auth from '../../services/authService';
 export default {
   setup () {
     return {
       drawer: ref(false),
       miniState: ref(true)
+    }
+  },
+  methods: {
+    sair(){
+      Auth.logout();
     }
   }
 }
