@@ -122,7 +122,7 @@ import router from '@/router/index';
         },
          computed: {
             currentUser() {
-                return this.$store.state.auth.usuario;
+                return JSON.parse(localStorage.getItem('usuario')); 
             }
         },
         mounted() {

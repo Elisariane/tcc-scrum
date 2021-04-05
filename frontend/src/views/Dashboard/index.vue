@@ -14,6 +14,7 @@
 import Menu from '@/components/Menu/index.vue';
 import Footer from '@/components/Footer/index.vue';
 import ProjetosEmHoras from '@/components/ProjetosEmHoras/index.vue';
+import store from '../../store/auth.module.js';
 export default {
   name: 'Dashboard',
   components: {
@@ -21,5 +22,7 @@ export default {
     Footer,
     ProjetosEmHoras
   },
+  mounted(){
+  }
 }
 </script>

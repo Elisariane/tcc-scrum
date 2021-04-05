@@ -196,8 +196,7 @@ import Footer from '@/components/Footer/index.vue';
 import ProjetosEmHoras from '@/components/ProjetosEmHoras/index.vue';
 import TccBacklogDataService from '../../services/tccBacklogDataService';
 import UsuarioDataService from '../../services/usuarioDataService';
-import { ref } from 'vue'; 
-import { useQuasar } from 'quasar'
+import { ref } from 'vue';  
 
 
 export default {
@@ -208,7 +207,10 @@ export default {
     ProjetosEmHoras
   },
   mounted () {
-    // this.getItens()
+    this.currentUser = JSON.parse(localStorage.getItem('usuario')); 
+    this.idUsuario = this.currentUser.id;
+    this.getItens();
+
   },
   setup () {
     return {
@@ -224,6 +226,7 @@ export default {
       pesquisaItem: '',
       dropdownPopoverShow: false,
       idUsuario: 0,
+      currentUser: null,
       prioridades: [
         'Alta',
         'Média',
@@ -310,8 +313,8 @@ export default {
         prioridade: this.itemTccBacklog.prioridade,
         estimativa: this.itemTccBacklog.estimativa,
         status: "pendente",
-        id_usuario: 1, //por hora o usuario será fixo
-        dataCadastro: new Date().toISOString()
+        id_usuario: this.currentUser.id,
+        dataCadastro: new Date()
       };
 
       TccBacklogDataService.create(data)
@@ -381,7 +384,7 @@ export default {
     getItens() {
         UsuarioDataService.getAllByUsuario(this.idUsuario).then( response => {
           console.log(response.data)
-        this.listItensTccBakclog = response.data[0].tccBacklogs;
+          this.listItensTccBakclog = response.data[0].tccBacklogs;
       })
     },
     getAllPrioridadeAlta() {

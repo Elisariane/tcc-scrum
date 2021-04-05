@@ -22,7 +22,7 @@
             <q-card-section class="bg-green-6 q-pa-sm text-white">
               <q-item class="q-pb-none q-pt-xs">
                 <q-item-section>
-                  <q-item-label class="text-h4" style="font-weight: 500;letter-spacing: 3px;">{{ totalHorasConcluido() !== 0 ? 0 : totalHorasConcluido() }}%</q-item-label>
+                  <q-item-label class="text-h4" style="font-weight: 500;letter-spacing: 3px;">{{ totalHorasConcluido() === NaN  ? 0 : totalHorasConcluido() }}%</q-item-label>
                   <q-item-label class="text-grey-4">Total de Tarefas Concluídas</q-item-label>
                 </q-item-section>
 
@@ -38,7 +38,7 @@
             <q-card-section class="bg-yellow-8  q-pa-sm text-white">
               <q-item class="q-pb-none q-pt-xs">
                 <q-item-section>
-                  <q-item-label class="text-h4" style="font-weight: 500;letter-spacing: 3px;">{{ totalHorasEmAndamento() !== 0 ? 0 : totalHorasEmAndamento() }}%</q-item-label>
+                  <q-item-label class="text-h4" style="font-weight: 500;letter-spacing: 3px;">{{ totalHorasEmAndamento() === NaN  ? 0 : totalHorasEmAndamento() }}%</q-item-label>
                   <q-item-label class="text-grey-4">Total de Tarefas em Andamento</q-item-label>
                 </q-item-section>
 
@@ -54,7 +54,7 @@
             <q-card-section class="bg-deep-orange-6  q-pa-sm text-white">
               <q-item class="q-pb-none q-pt-xs">
                 <q-item-section>
-                  <q-item-label class="text-h4" style="font-weight: 500;letter-spacing: 3px;">{{totalHorasPendente() !== 0 ? 0 : totalHorasPendente() }}%</q-item-label>
+                  <q-item-label class="text-h4" style="font-weight: 500;letter-spacing: 3px;">{{totalHorasPendente() === NaN ? 0 : totalHorasPendente() }}%</q-item-label>
                   <q-item-label class="text-grey-4">Total de Tarefas Pendentes </q-item-label>
                 </q-item-section>
 
@@ -75,12 +75,15 @@ import UsuarioDataService from '../../services/usuarioDataService';
 import moment from 'moment';
 export default {
    mounted () {
-    this.getAllItens()
+     this.currentUser = JSON.parse(localStorage.getItem('usuario')); 
+     this.idUsuario = this.currentUser.id;
+    this.getAllItens();
   },
   data() {
         return {
         listTodosItens: [],
-        idUsuario: 0
+        idUsuario: 0,
+        currentUser: null
         }
     },
     methods: {

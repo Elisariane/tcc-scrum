@@ -1,7 +1,7 @@
 <template>
   <q-layout view="hHh lpR fFf">
     <q-page-container>
-    <div class="q-pa-md"  v-if="this.sprint === null">
+    <div class="q-pa-md"  v-if="this.sprintActive === false">
         <q-stepper
             v-model="step"
             header-nav
@@ -18,7 +18,7 @@
         >
             <h5 class="text-title2 text-center">Informações da Sprint</h5>
 
-            <p class="q-mb-md text-center text-body2 text-weight-light text-grey-7"  >Sprint é o ciclo iterativo de tempo de execução e tem duração de 15 dias. Toda Sprint tem seu 
+            <p class="q-mb-md text-center text-body2 text-weight-light text-grey-7">Sprint é o ciclo iterativo de tempo de execução e tem duração de 15 dias. Toda Sprint tem seu 
             objetivo, pode ser algo importante
             á ser atingido. Exemplo: "Concluir navegação na página por permissão de usuário"
             </p>
@@ -311,7 +311,7 @@
         </q-stepper>
     </div>
 
-    <div class="q-pa-md justify-center" v-if="this.sprint !== null">
+    <div class="q-pa-md justify-center" v-if="this.sprintActive === true">
         <div class="q-pa-lg row q-gutter-md">
             <q-card class="my-card">
             <q-card-section class="bg-deep-orange-8 text-white">
@@ -369,17 +369,15 @@
                 </div>  
             <q-separator class="q-ma-md" color="orange"  />
             <q-section>
-                <p class="  text-center"> <strong>Informações extras</strong></p>
-                <p>Faltam <strong>{{  this.checkCountTimeForDoneSprint() }}</strong> dias para terminar a sprint.</p>
-                <p>Resta <strong>{{ this.checkCountTarefasIsPendente() }}</strong> {{this.checkCountTarefasIsPendente() !== 1 ? 'tarefas a serem finalizadas.' : 'tarefa para ser finalizada.'}}</p>
-                <h1>{{ this.checkNowIsDateEnd() }}</h1>
-               <div class="text-right" v-if="this.checkCountTarefasIsPendente() === 0 && ( this.checkNowIsDateEnd() === true)">
+               <div class="text-right">
                     <q-btn 
                         icon="check"
                         rounded
                         color="positive" 
                         label="Concluir Sprint" 
+                        @click="confirmFinalizacaoSprint = true"
                     />
+
                </div>
             </q-section>
             </q-card-section>
@@ -387,7 +385,22 @@
         </div>
     
     </div>
-     
+
+      <q-dialog v-model="confirmFinalizacaoSprint" persistent>
+        <q-card>
+            <q-card-section class="row items-center">
+            <q-avatar class="q-mrb-sm" icon="warning" color="warning" text-color="white" />
+            <span class="q-ml-sm text-center">Tem certeza que deseja finalizar a Sprint? <br/> 
+                <p class="q-ml-sm text-center" v-if="this.checkCountTarefasIsPendente() > 0">Ainda resta <strong>{{ this.checkCountTarefasIsPendente() }}</strong> {{this.checkCountTarefasIsPendente() !== 1 ? 'tarefas a serem finalizadas.' : 'tarefa para ser finalizada.'}}</p>
+            </span>
+            </q-card-section>
+
+            <q-card-actions align="center">
+            <q-btn  label="Finalizar"  @click="finalizarSprint()" color="positive" v-close-popup />
+            <q-btn flat  label="Cancelar" color="primary" v-close-popup />
+            </q-card-actions>
+        </q-card>
+        </q-dialog>
 
     </q-page-container>
 
@@ -400,31 +413,32 @@
 <script>
 import Menu from '@/components/Menu/index.vue';
 import Footer from '@/components/Footer/index.vue';
+
 import { ref } from 'vue'
 import TccBacklogDataService from '../../services/tccBacklogDataService';
 import SprintDataService from  '../../services/sprintDataService';
 import ItensTccSprintDataService from '../../services/itensTccSprintDataService';
 import moment from 'moment';
-import draggable from "vuedraggable";
 import usuarioDataService from '../../services/usuarioDataService';
-import { date } from 'quasar';
 
 export default {
   name: 'CriarSprint',
   components: {
     Menu,
-    Footer,
-    draggable
+    Footer
   },
   mounted(){
-    this.verifyExistsSprintAtiva(),
-    this.getAllPrioridadeAlta(),
-    this.getAllPrioridadeMedia(),
-    this.getAllPrioridadeBaixa()
+    this.currentUser = JSON.parse(localStorage.getItem('usuario')); 
+    this.idUsuario = this.currentUser.id;
+    this.verifyExistsSprintAtiva();
+    this.getAllPrioridadeAlta();
+    this.getAllPrioridadeMedia();
+    this.getAllPrioridadeBaixa();
     
   },
      data() {
     return { 
+        confirmFinalizacaoSprint: ref(false),
         listaTarefasEscolhidas: [],
         listaTarefasPrioridadeAlta: [],
         listaTarefasPrioridadeMedia: [],
@@ -432,8 +446,10 @@ export default {
         allTarefasByUsuario: [],
         horasTotaisPorDia: 0,
         horasTotaisLimite: 0,
+        currentUser: null,
         idUsuario: 0,
         idSprintForSearch: 0,
+        sprintActive: false,
 
         sprint: {
             dataInicio: "",
@@ -476,12 +492,42 @@ export default {
                 console.log(e);
             });
         }
+        this.sprintActive = true;
         })
         .catch(e => {
             console.log(e);
         });
        
       
+    },
+    finalizarSprint() {
+        let todosItensTccSprint = [];
+        ItensTccSprintDataService.getAll().then(response => {
+            for (const key in response.data) {
+                if(response.data[key].id_sprint === this.idSprintForSearch){
+                    todosItensTccSprint.push(response.data[key])
+                }
+               
+            } 
+            for (const item in todosItensTccSprint) {
+                let dataItensTccSprint = {
+                    id: todosItensTccSprint[item].id,
+                    id_sprint: this.sprint.id,
+                    id_item_tcc_backlog: this.listaTarefasEscolhidas[item].id,
+                    concluido: true
+                };
+                ItensTccSprintDataService.update(dataItensTccSprint.id, dataItensTccSprint).then(response => {
+                    this.itensTccSprints = {};
+                    this.sprint = {};
+                    this.listaTarefasEscolhidas = [];
+                    this.confirmFinalizacaoSprint = false;
+                    this.sprintActive = false;
+                }).catch(e => {
+                    console.log(e);
+                });
+            }
+             
+        })
     },
     getAllPrioridadeAlta() {
         TccBacklogDataService.getAllPrioridadeAlta(this.idUsuario).then( response => {
@@ -552,9 +598,11 @@ export default {
             this.sprint.dataInicio = moment(response.data.dataInicio).format("DD/MM/YYYY");
             this.sprint.dataFim = moment(response.data.dataFim).format("DD/MM/YYYY"); 
             this.sprint.objetivo = response.data.objetivo;
+            this.sprintActive = true;
         })
         } else {
             this.sprint = {}
+            this.sprintActive = false;
         }
     },
     checkCountTimeForDoneSprint() {
@@ -591,3 +639,9 @@ export default {
  
 }
 </script>
+<style >
+.grid-style-transition {
+ transition: transform .28s, background-color .28s
+}
+ 
+</style>

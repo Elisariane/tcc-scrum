@@ -5,6 +5,8 @@ module.exports = app => {
   
     router.post("/", itensTccSprint.create);
   
+    router.get("/", itensTccSprint.findAll);
+
     router.get("/sprint/:id", itensTccSprint.findAllByUsuario);
   
     router.get("/:id", itensTccSprint.findOne);
