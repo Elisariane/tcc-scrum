@@ -5,6 +5,10 @@
   <q-page-container>
  
   <ProjetosEmHoras/>
+
+  <q-separator inset="" />
+
+  <!-- <BurndownChart/> -->
   </q-page-container>
   <Footer/>
   </q-layout>
@@ -14,13 +18,14 @@
 import Menu from '@/components/Menu/index.vue';
 import Footer from '@/components/Footer/index.vue';
 import ProjetosEmHoras from '@/components/ProjetosEmHoras/index.vue';
-import store from '../../store/auth.module.js';
+import BurndownChart from '@/components/BurndownChart/index.vue';
 export default {
   name: 'Dashboard',
   components: {
     Menu,
     Footer,
-    ProjetosEmHoras
+    ProjetosEmHoras,
+    BurndownChart
   },
   mounted(){
   }

@@ -1,7 +1,7 @@
 <template>
   <q-layout view="hHh lpR fFf">
     <q-page-container>
-    <div class="q-pa-md"  v-if="this.sprintActive === false">
+    <div class="q-pa-md"  v-if="this.idSprintForSearch === 0">
         <q-stepper
             v-model="step"
             header-nav
@@ -281,7 +281,7 @@
                                     <p v-if="this.listaTarefasEscolhidas.length === 0" class="text-center text-red-8 bg-grey-1">
                                     Nenhuma tarefa escolhida ainda... Volte ao passo anterior e escolhas as tarefas
                                     </p>
-                                    <q-item tag="label" v-ripple v-for="item in this.listaTarefasEscolhidas" :key="item.this.idUsuario">
+                                    <q-item tag="label" v-ripple v-for="item in this.listaTarefasEscolhidas" :key="item.id_usuario">
                                         <q-item-section>
                                         <q-item-label>{{item.requisito}}</q-item-label>
                                         <q-item-label caption>
@@ -311,7 +311,7 @@
         </q-stepper>
     </div>
 
-    <div class="q-pa-md justify-center" v-if="this.sprintActive === true">
+    <div class="q-pa-md justify-center" v-if="this.idSprintForSearch !== 0">
         <div class="q-pa-lg row q-gutter-md">
             <q-card class="my-card">
             <q-card-section class="bg-deep-orange-8 text-white">
@@ -391,7 +391,6 @@
             <q-card-section class="row items-center">
             <q-avatar class="q-mrb-sm" icon="warning" color="warning" text-color="white" />
             <span class="q-ml-sm text-center">Tem certeza que deseja finalizar a Sprint? <br/> 
-                <p class="q-ml-sm text-center" v-if="this.checkCountTarefasIsPendente() > 0">Ainda resta <strong>{{ this.checkCountTarefasIsPendente() }}</strong> {{this.checkCountTarefasIsPendente() !== 1 ? 'tarefas a serem finalizadas.' : 'tarefa para ser finalizada.'}}</p>
             </span>
             </q-card-section>
 
@@ -516,6 +515,18 @@ export default {
                     id_item_tcc_backlog: this.listaTarefasEscolhidas[item].id,
                     concluido: true
                 };
+                
+                let dataTccBacklog = {
+                    requisito:  this.listaTarefasEscolhidas[item].requisito,
+                    descricao:  this.listaTarefasEscolhidas[item].descricao,
+                    prioridade:  this.listaTarefasEscolhidas[item].prioridade,
+                    estimativa:  this.listaTarefasEscolhidas[item].estimativa,
+                    status: "finalizado",
+                    id_usuario:  this.listaTarefasEscolhidas[item].id_usuario
+                }; 
+                    TccBacklogDataService.update(dataItensTccSprint.id_item_tcc_backlog, dataTccBacklog).then().catch(e => {
+                        console.log(e);
+                    });
                 ItensTccSprintDataService.update(dataItensTccSprint.id, dataItensTccSprint).then(response => {
                     this.itensTccSprints = {};
                     this.sprint = {};
@@ -601,8 +612,8 @@ export default {
             this.sprintActive = true;
         })
         } else {
+            this.idSprintForSearch = 0;
             this.sprint = {}
-            this.sprintActive = false;
         }
     },
     checkCountTimeForDoneSprint() {

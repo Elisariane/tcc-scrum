@@ -68,7 +68,7 @@ export default {
   },
   created() {
     if (this.loggedIn) {
-      router.push('/');
+      router.push('/login');
     }
   },
   data() {
@@ -90,7 +90,6 @@ export default {
           email: this.usuario.email,
           senha: this.usuario.senha
       });
-        console.log(usuarioData)
         Auth.signIn(usuarioData).then(
         response => {
             this.message = response.data.message;

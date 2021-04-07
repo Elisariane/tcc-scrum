@@ -20,8 +20,8 @@ class AuthService {
   }
 
   logout() {
-    localStorage.removeItem('usuario');
     router.push('/login');
+    localStorage.removeItem('usuario');
   }
 
   register(usuario) {

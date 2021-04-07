@@ -44,6 +44,7 @@
                         <div class="text-h4 q-ma-sm q-pa-md text-center">Alterar dados</div>
 
                         <q-form
+                        @submit="onSubmit"
                         class="q-gutter-md"
                         >
 
@@ -84,7 +85,7 @@
  
 
                         <div class="text-center">
-                            <q-btn rounded label="Alterar" type="submit" color="primary"/>
+                            <q-btn rounded label="Alterar" type="submit"  @click="editItem()" color="primary"/>
                         </div>
                         </q-form>
                     </q-card-section>
@@ -102,7 +103,7 @@
 import Menu from '@/components/Menu/index.vue';
 import Footer from '@/components/Footer/index.vue';
 import router from '@/router/index';
-
+import UsuarioDataService from '../../services/usuarioDataService';
     export default {
         name: "Profile",
           components: {
@@ -111,6 +112,7 @@ import router from '@/router/index';
         },
          data() {
             return {
+                usuarioCurrent: {},
                 usuario: {
                     nome: '',
                     email: '',
@@ -125,9 +127,24 @@ import router from '@/router/index';
                 return JSON.parse(localStorage.getItem('usuario')); 
             }
         },
-        mounted() {
-            if (!this.currentUser) {
-               router.push('/login');
+         methods: {
+            editItem() {
+                var data = {
+                    nome: this.usuario.nome,
+                    email:  this.usuario.email,
+                    senha: this.senha,
+                    tipoUsuario: this.usuarioCurrent.tipoUsuario
+                };
+                console.log(this.usuarioCurrent)
+
+                UsuarioDataService.update(this.usuarioCurrent.id, data)
+                    .then(response => {
+                        this.usuarioCurrent = response.data;
+                        console.log(response.data)
+                        localStorage.setItem('usuario', JSON.stringify(response.data));
+                        router.push('/login');
+                  
+                     });
             }
         }
     }

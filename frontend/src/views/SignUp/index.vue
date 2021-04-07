@@ -106,7 +106,7 @@ export default {
   },
   created() {
     if (this.loggedIn) {
-     router.push('/');
+     router.push('/login');
     }
   },
   data() {

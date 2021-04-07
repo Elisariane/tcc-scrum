@@ -7,7 +7,7 @@
               <q-item class="q-pb-none q-pt-xs">
                 <q-item-section>
                   <q-item-label class="text-h4" style="font-weight: 500;letter-spacing: 3px;">{{totalHoras()}}</q-item-label>
-                  <q-item-label class="text-grey-4">Total Estimado do Projeto</q-item-label>
+                  <q-item-label class="text-white">Total Estimado do Projeto</q-item-label>
                 </q-item-section>
 
                 <q-item-section side>
@@ -23,7 +23,7 @@
               <q-item class="q-pb-none q-pt-xs">
                 <q-item-section>
                   <q-item-label class="text-h4" style="font-weight: 500;letter-spacing: 3px;">{{ totalHorasConcluido() === NaN  ? 0 : totalHorasConcluido() }}%</q-item-label>
-                  <q-item-label class="text-grey-4">Total de Tarefas Concluídas</q-item-label>
+                  <q-item-label class="text-white">Total de Tarefas Concluídas</q-item-label>
                 </q-item-section>
 
                 <q-item-section side>
@@ -35,11 +35,11 @@
         </div>
         <div class="col-md-3 col-lg-3 col-sm-12 col-xs-12 box_3 ">
           <q-card class="shadow">
-            <q-card-section class="bg-yellow-8  q-pa-sm text-white">
+            <q-card-section class="bg-yellow-9  q-pa-sm text-white">
               <q-item class="q-pb-none q-pt-xs">
                 <q-item-section>
                   <q-item-label class="text-h4" style="font-weight: 500;letter-spacing: 3px;">{{ totalHorasEmAndamento() === NaN  ? 0 : totalHorasEmAndamento() }}%</q-item-label>
-                  <q-item-label class="text-grey-4">Total de Tarefas em Andamento</q-item-label>
+                  <q-item-label class="text-white">Total de Tarefas em Andamento</q-item-label>
                 </q-item-section>
 
                 <q-item-section side>
@@ -55,7 +55,7 @@
               <q-item class="q-pb-none q-pt-xs">
                 <q-item-section>
                   <q-item-label class="text-h4" style="font-weight: 500;letter-spacing: 3px;">{{totalHorasPendente() === NaN ? 0 : totalHorasPendente() }}%</q-item-label>
-                  <q-item-label class="text-grey-4">Total de Tarefas Pendentes </q-item-label>
+                  <q-item-label class="text-white">Total de Tarefas Pendentes </q-item-label>
                 </q-item-section>
 
                 <q-item-section side>

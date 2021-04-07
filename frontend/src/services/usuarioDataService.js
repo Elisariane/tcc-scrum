@@ -7,6 +7,10 @@ class UsuarioDataService {
         return http.get(`/usuario/allBy/${id}`); 
       }
 
+      update(id, data) {
+        return http.put(`/usuario/${id}`, data);
+      }
+
     signUp(data){
       return http.post('/auth/signup', data)
     }

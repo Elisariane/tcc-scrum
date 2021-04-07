@@ -88,7 +88,11 @@
           <q-td key="estimativa" :props="props"> 
               {{props.row.estimativa}}
           </q-td>
-          <q-td key="acao" :props="props"> 
+          <q-td key="acao" :props="props"  v-if="props.row.status === 'finalizado'"> 
+              <q-btn  color="grey-8" disable  class="q-ma-sm">  <q-icon name="mode_edit" /> </q-btn>
+              <q-btn  color="grey-8" disable  > <q-icon name="delete_forever" /> </q-btn>
+          </q-td>  
+          <q-td key="acao" :props="props"  v-if="props.row.status !== 'finalizado'"> 
               <q-btn  color="primary" @click="toolbar = true; selectItemForEdit(props.row.id)"  class="q-ma-sm">  <q-icon name="mode_edit" /> </q-btn>
               <q-btn color="negative"  @click="selectItemForDelete(props.row.id); confirmDelete = true" > <q-icon name="delete_forever" /> </q-btn>
           </q-td>  
@@ -210,6 +214,7 @@ export default {
     this.currentUser = JSON.parse(localStorage.getItem('usuario')); 
     this.idUsuario = this.currentUser.id;
     this.getItens();
+    this.verifyExistsSprintAtiva();
 
   },
   setup () {
@@ -227,6 +232,7 @@ export default {
       dropdownPopoverShow: false,
       idUsuario: 0,
       currentUser: null,
+      listaTarefasInclusasSprint: [],
       prioridades: [
         'Alta',
         'Média',
@@ -306,6 +312,19 @@ export default {
     }    
   },
   methods: {
+     async verifyExistsSprintAtiva()  {
+        await UsuarioDataService.getAllByUsuario(this.idUsuario).then(response => {
+            for (const i in response.data[0].tccBacklogs) {
+                if (response.data[0].tccBacklogs[i].itensTccSprints[i].concluido === false) {
+                    if(response.data[0].tccBacklogs[i].itensTccSprints[i].id_item_tcc_backlog === response.data[0].tccBacklogs[i].id) {
+                        this.listaTarefasInclusasSprint = [];
+                        this.listaTarefasInclusasSprint.push(response.data[0].tccBacklogs[i].id)
+                    }
+                }
+               
+            }
+        });
+    },
     saveItem() {
       var data = {
         requisito: this.itemTccBacklog.requisito,
@@ -383,7 +402,6 @@ export default {
     },
     getItens() {
         UsuarioDataService.getAllByUsuario(this.idUsuario).then( response => {
-          console.log(response.data)
           this.listItensTccBakclog = response.data[0].tccBacklogs;
       })
     },

@@ -103,7 +103,8 @@ exports.update = (req, res) => {
     .then(num => {
       if (num == 1) {
         res.send({
-          message: "Usuario foi edidado com sucesso!"
+          message: "Usuario foi edidado com sucesso!",
+          data
         });
       } else {
         res.send({
